@@ -7,7 +7,7 @@ st.write("GitHubのアップロード制限（25MB）などを回避するため
 # 1. ファイルのアップロード
 uploaded_file = st.file_uploader("分割したいファイルを選択してください", type=["zip"])
 
-# 2. 分割サイズの設定（GitHubの制限を考慮してデフォルト24MB）
+# 2. 分割サイズの設定
 chunk_size_mb = st.number_input("1ファイルあたりの分割サイズ (MB)", min_value=1, max_value=50, value=24)
 
 if uploaded_file is not None:
@@ -29,7 +29,6 @@ if uploaded_file is not None:
         end = min(start + chunk_size_bytes, total_size)
         chunk_data = file_bytes[start:end]
         
-        # 連番の拡張子を付与（例: filename.zip.001）
         chunk_name = f"{uploaded_file.name}.{i+1:03d}"
         
         st.download_button(
@@ -41,9 +40,10 @@ if uploaded_file is not None:
 
 st.markdown("---")
 st.subheader("💡 分割したファイルの結合方法")
-st.write("""
-ダウンロードした複数ファイル（`.001`, `.002`...）を元のZIPファイルに戻すには、コマンドラインを使用します。結合したいファイルを同じフォルダに置き、以下を実行してください。
+st.write("ダウンロードした複数ファイル（`.001`, `.002`...）を元のZIPファイルに戻すには、コマンドラインを使用します。結合したいファイルを同じフォルダに置き、以下を実行してください。")
 
-**Windowsの場合 (コマンドプロンプト):**
-```cmd
-copy /B 結合するファイル名.zip.* 結合後のファイル名.zip
+st.write("**Windowsの場合 (コマンドプロンプト):**")
+st.code("copy /B 結合するファイル名.zip.* 結合後のファイル名.zip", language="cmd")
+
+st.write("**Mac/Linuxの場合 (ターミナル):**")
+st.code("cat 結合するファイル名.zip.* > 結合後のファイル名.zip", language="bash")
